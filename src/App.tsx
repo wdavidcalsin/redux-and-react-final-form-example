@@ -1,24 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { Field, Form } from "react-final-form";
+import "./App.css";
 
 function App() {
+  const [data, setData] = useState({} as any);
+  const [listData, setListData] = useState([] as any);
+
+  const onSubmit = (values: any) => {
+    setData(values);
+    setListData([...listData, data]);
+
+    console.log(listData);
+
+    // setData({ value: "" });
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h3>Redux adn react-final-form</h3>
+      <Form
+        onSubmit={onSubmit}
+        render={({ handleSubmit }) => (
+          <form onSubmit={handleSubmit}>
+            <Field
+              value={data.value}
+              name="value"
+              component="input"
+              type="text"
+            />
+            <button type="submit">Save</button>
+          </form>
+        )}
+      />
+      <ul>
+        {listData.map((data: any, key: number) => (
+          <li key={key}>{data.value}</li>
+        ))}
+      </ul>
     </div>
   );
 }
