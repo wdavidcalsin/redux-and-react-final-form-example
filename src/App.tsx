@@ -1,39 +1,38 @@
-import React, { useState } from "react";
+import React from "react";
 import { Field, Form } from "react-final-form";
+import { useDispatch, useSelector } from "react-redux";
+import { addAction } from "./action/add.action";
 import "./App.css";
 
 function App() {
-  const [data, setData] = useState({} as any);
-  const [listData, setListData] = useState([] as any);
+  const dataValue = useSelector((state: any) => state.add);
+  const dispatch = useDispatch();
 
   const onSubmit = (values: any) => {
-    setData(values);
-    setListData([...listData, data]);
-
-    console.log(listData);
-
-    // setData({ value: "" });
+    dispatch(addAction(values));
+    console.log(dataValue);
   };
 
   return (
     <div className="App">
-      <h3>Redux adn react-final-form</h3>
+      <h3>Redux and react-final-form</h3>
       <Form
         onSubmit={onSubmit}
-        render={({ handleSubmit }) => (
-          <form onSubmit={handleSubmit}>
-            <Field
-              value={data.value}
-              name="value"
-              component="input"
-              type="text"
-            />
+        initialValues={{ employed: true }}
+        render={({ handleSubmit, form }) => (
+          <form
+            onSubmit={async (event) => {
+              await handleSubmit(event);
+              form.reset();
+            }}
+          >
+            <Field name="value" component="input" />
             <button type="submit">Save</button>
           </form>
         )}
       />
       <ul>
-        {listData.map((data: any, key: number) => (
+        {dataValue.map((data: any, key: number) => (
           <li key={key}>{data.value}</li>
         ))}
       </ul>
